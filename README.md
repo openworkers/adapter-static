@@ -1,6 +1,6 @@
 # @openworkers/adapter-static
 
-Static site adapter for OpenWorkers. Takes any static site output and generates a worker + assets ready for deployment.
+Static site adapter for OpenWorkers. Converts any static site into a deployable worker with optimized asset serving.
 
 ## Installation
 
@@ -8,26 +8,30 @@ Static site adapter for OpenWorkers. Takes any static site output and generates 
 bun add -g @openworkers/adapter-static
 ```
 
-## Usage
-
-### CLI
+## Quick Start
 
 ```bash
-# Auto-detect input folder (dist, build, out, public)
+# Auto-detect input folder and generate worker
 adapter-static
 
-# Specify input and output
+# Specify input and output directories
 adapter-static ./build -o ./dist
 
-# SPA mode (fallback to index.html for all routes)
-adapter-static --fallback /index.html
-
-# Force routing mode
-adapter-static --mode flat      # /page -> /page.html
-adapter-static --mode directory # /page -> /page/index.html
+# Custom 404 page
+adapter-static --fallback /404.html
 ```
 
-### Programmatic
+## CLI Options
+
+| Option    | Flag             | Default            | Description                                         |
+| --------- | ---------------- | ------------------ | --------------------------------------------------- |
+| Input     | positional       | auto-detect        | Source directory (`dist`, `build`, `out`, `public`) |
+| Output    | `-o, --out`      | `dist-openworkers` | Output directory                                    |
+| Mode      | `-m, --mode`     | auto-detect        | Routing mode: `directory` or `flat`                 |
+| Fallback  | `-f, --fallback` | none               | Fallback file for unmatched routes                  |
+| Immutable | `--immutable`    | auto-detect        | Comma-separated immutable path patterns             |
+
+## Programmatic Usage
 
 ```js
 import { adapt } from '@openworkers/adapter-static';
@@ -36,28 +40,50 @@ await adapt({
   input: 'build',
   out: 'dist',
   mode: 'flat',
-  fallback: '/index.html'
+  fallback: '/404.html'
 });
 ```
 
-## Output
+## Output Structure
 
 ```
 dist/
-├── worker.js   # Worker that serves static files via ASSETS binding
+├── worker.js   # Worker serving files via ASSETS binding
 ├── assets/     # Static files
-└── routes.js   # Route manifest for edge routing
+└── routes.js   # Route manifest
 ```
 
-## Deploying to OpenWorkers
+## Routing Modes
 
-### Quick deploy (existing worker with ASSETS binding)
+The adapter auto-detects the routing mode based on your file structure.
+
+| Mode          | URL      | File                |
+| ------------- | -------- | ------------------- |
+| **Directory** | `/about` | `/about/index.html` |
+| **Flat**      | `/about` | `/about.html`       |
+
+Directory mode is used by most static generators. Flat mode is common with SvelteKit static adapter.
+
+## Immutable Assets
+
+Assets with hashed filenames are served with long cache headers (`max-age=31536000, immutable`).
+
+Auto-detected patterns:
+
+- `/_app/immutable/*` — SvelteKit
+- `/assets/*` — Vite
+- `/_next/static/*` — Next.js
+- `/_astro/*` — Astro
+
+## Deploy to OpenWorkers
+
+**Quick deploy** (existing worker):
 
 ```bash
 ow workers upload my-site ./dist
 ```
 
-### Full setup from scratch
+**Full setup**:
 
 ```bash
 # 1. Create storage for assets
@@ -80,42 +106,7 @@ adapter-static ./build -o ./dist
 ow workers upload my-site ./dist
 ```
 
-Your site is now live at `https://my-site.workers.rocks`
-
-## Options
-
-| Option      | CLI              | Default            | Description                        |
-| ----------- | ---------------- | ------------------ | ---------------------------------- |
-| `input`     | positional       | auto-detect        | Input directory                    |
-| `out`       | `-o, --out`      | `dist-openworkers` | Output directory                   |
-| `mode`      | `-m, --mode`     | auto-detect        | `directory` or `flat`              |
-| `fallback`  | `-f, --fallback` | none               | SPA fallback file                  |
-| `immutable` | `--immutable`    | auto-detect        | Comma-separated immutable patterns |
-
-## Routing Modes
-
-**Directory mode** (default for most static generators):
-
-- `/about` → `/about/index.html`
-- `/docs/intro` → `/docs/intro/index.html`
-
-**Flat mode** (SvelteKit static, some others):
-
-- `/about` → `/about.html`
-- `/docs/intro` → `/docs/intro.html`
-
-The adapter auto-detects the mode based on your file structure.
-
-## Immutable Assets
-
-Assets with hashed filenames are automatically detected and served with long cache headers (`max-age=31536000, immutable`).
-
-Detected patterns:
-
-- `/_app/immutable/*` (SvelteKit)
-- `/assets/*` (Vite)
-- `/_next/static/*` (Next.js)
-- `/_astro/*` (Astro)
+Your site is live at `https://my-site.workers.rocks`
 
 ## License
 
