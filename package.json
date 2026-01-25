@@ -1,6 +1,6 @@
 {
   "name": "@openworkers/adapter-static",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Static site adapter for OpenWorkers",
   "keywords": [
     "adapter",
@@ -29,17 +29,17 @@
   "types": "index.d.ts",
   "files": [
     "bin",
-    "src",
+    "files",
     "index.js",
     "index.d.ts"
   ],
   "scripts": {
     "build": "esbuild src/worker.js --bundle --outfile=files/worker.js --external:ROUTES --format=esm",
-    "prepublishOnly": "bun run build",
+    "prepublishOnly": "npm run build",
     "format": "prettier --write ."
   },
   "dependencies": {
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.27.2",
     "mime": "^4.0.0"
   },
   "devDependencies": {
