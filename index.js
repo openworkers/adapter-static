@@ -57,7 +57,7 @@ export async function adapt(options = {}) {
 
   // Bundle worker with esbuild
   await build({
-    entryPoints: [fileURLToPath(new URL('./src/worker.js', import.meta.url).href)],
+    entryPoints: [fileURLToPath(new URL('./files/worker.js', import.meta.url).href)],
     bundle: true,
     format: 'esm',
     platform: 'browser',
