@@ -48,9 +48,9 @@ await adapt({
 
 ```
 dist/
-├── worker.js   # Worker serving files via ASSETS binding
-├── assets/     # Static files
-└── routes.js   # Route manifest
+├── _worker.js     # Worker serving files via ASSETS binding
+├── _routes.json   # Route manifest for edge routing
+└── assets/        # Static files
 ```
 
 ## Routing Modes
