@@ -1,7 +1,7 @@
 /// <reference types="@openworkers/workers-types" />
 
 import mime from 'mime/lite';
-import { routes } from 'ROUTES';
+import routes from 'ROUTES';
 
 /** @typedef {{ ASSETS: BindingAssets }} Env */
 
