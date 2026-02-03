@@ -64,7 +64,7 @@ Options:
   -o, --out <dir>      Output directory (default: dist-openworkers)
   -m, --mode <mode>    Routing mode: 'directory' or 'flat' (default: auto-detect)
   -f, --fallback <f>   SPA fallback file (e.g., /index.html or /200.html)
-  --immutable <p>      Comma-separated immutable patterns (e.g., /assets/*,/_app/*)
+  --immutable <p>      Comma-separated immutable patterns (e.g., /assets/**,/_app/**)
   -h, --help           Show this help message
   -v, --version        Show version
 

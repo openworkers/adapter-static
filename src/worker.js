@@ -12,8 +12,11 @@ import routes from 'ROUTES';
  */
 function isImmutable(pathname) {
   for (const pattern of routes.immutable) {
-    if (pattern.endsWith('/*')) {
-      const prefix = pattern.slice(0, -1);
+    // Handle wildcard patterns (/* or /**)
+    if (pattern.endsWith('/**') || pattern.endsWith('/*')) {
+      const prefix = pattern.endsWith('/**')
+        ? pattern.slice(0, -2)  // Remove **
+        : pattern.slice(0, -1); // Remove *
 
       if (pathname.startsWith(prefix)) {
         return true;

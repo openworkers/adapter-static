@@ -29,7 +29,7 @@ export interface AdapterOptions {
   /**
    * Glob patterns for immutable assets (hashed filenames)
    * These files get long cache headers
-   * @default auto-detected (/_app/immutable/*, /assets/*, etc.)
+   * @default auto-detected (/_app/immutable/**, /assets/**, etc.)
    */
   immutable?: string[];
 }

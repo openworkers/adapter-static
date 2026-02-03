@@ -70,10 +70,10 @@ Assets with hashed filenames are served with long cache headers (`max-age=315360
 
 Auto-detected patterns:
 
-- `/_app/immutable/*` — SvelteKit
-- `/assets/*` — Vite
-- `/_next/static/*` — Next.js
-- `/_astro/*` — Astro
+- `/_app/immutable/**` — SvelteKit
+- `/assets/**` — Vite
+- `/_next/static/**` — Next.js
+- `/_astro/**` — Astro
 
 ## Deploy to OpenWorkers
 

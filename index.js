@@ -158,7 +158,7 @@ function detectImmutable(dir) {
 
   for (const pattern of commonImmutable) {
     if (existsSync(join(dir, pattern))) {
-      patterns.push(`/${pattern}/*`);
+      patterns.push(`/${pattern}/**`);
     }
   }
 
