@@ -62,9 +62,11 @@ export async function adapt(options = {}) {
     mode,
     fallback,
     immutable,
-    // Static: all files with their original names (including .html)
-    static: staticFiles.map((f) => '/' + f),
+    // Static: only non-HTML files (robots.txt, favicon.ico, etc.)
+    // HTML files are in prerendered to avoid duplication
+    static: nonHtmlFiles.map((f) => '/' + f),
     // Prerendered: HTML files without .html extension
+    // Requests with .html extension will match via fallback routing
     prerendered: prerenderedRoutes,
     functions: [],
     // If fallback is set, worker handles all unmatched routes (SPA mode)

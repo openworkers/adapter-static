@@ -1,6 +1,6 @@
 {
   "name": "@openworkers/adapter-static",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Static site adapter for OpenWorkers",
   "keywords": [
     "adapter",
