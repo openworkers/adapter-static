@@ -47,21 +47,31 @@ export async function adapt(options = {}) {
   const allFiles = listFiles(join(out, 'assets'));
   const staticFiles = allFiles.filter((f) => !isImmutablePath(f, immutable));
 
+  // Split HTML files and non-HTML files
+  const htmlFiles = staticFiles.filter((f) => f.endsWith('.html'));
+  const nonHtmlFiles = staticFiles.filter((f) => !f.endsWith('.html'));
+
+  // Generate prerendered routes (HTML files without .html extension)
+  const prerenderedRoutes = htmlFiles.map((f) => {
+    const path = '/' + f.replace(/\.html$/, '');
+    // Convert /index to / and /foo/index to /foo
+    return path.replace(/\/index$/, '/');
+  });
+
   const manifest = {
     mode,
     fallback,
     immutable,
+    // Static: all files with their original names (including .html)
     static: staticFiles.map((f) => '/' + f),
-    prerendered: [],
+    // Prerendered: HTML files without .html extension
+    prerendered: prerenderedRoutes,
     functions: [],
     // If fallback is set, worker handles all unmatched routes (SPA mode)
     ssr: fallback ? ['/*'] : []
   };
 
-  writeFileSync(
-    join(out, '_routes.json'),
-    JSON.stringify(manifest, null, 2)
-  );
+  writeFileSync(join(out, '_routes.json'), JSON.stringify(manifest, null, 2));
 
   // Bundle worker with esbuild (use _routes.json for ROUTES alias)
   await build({
